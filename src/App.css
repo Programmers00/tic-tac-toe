@@ -1,0 +1,72 @@
+.mainContainer {
+  text-align: center;
+}
+.main {
+  background-color: #ccc1af;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 3vmin;
+  color: white;
+  gap: 3vmin;
+  font-weight: 900;
+}
+
+.players {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1vmin;
+}
+.player {
+  width: 45%;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 1vmin;
+}
+.player1 {
+  background-color: #a2d5c6;
+}
+.player2 {
+  background-color: #077b8a;
+}
+
+.boardContainer {
+  padding: 2vmin;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1vmin;
+  background-color: #c2b7a3;
+  border-radius: 5px;
+}
+.boardRow {
+  display: flex;
+  flex-direction: row;
+  gap: 1vmin;
+  justify-content: center;
+}
+.box {
+  position: relative;
+  background-color: #5c3c92;
+  width: 100%;
+  border-radius: 5px;
+}
+.box:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.button {
+  background-color: #d72631;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  border-radius: 1vmin;
+  padding: 1vmin;
+}
