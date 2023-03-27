@@ -7,7 +7,7 @@ import PlayerClass from "./class/PlayerClass";
 import GameClass from "./class/GameClass";
 import BoardClass from "./class/BoardClass";
 
-/** Board component */
+/** Player component */
 const Player = ({ mark, color, selected }) => {
   return (
     <div className={`player + ${color} + ${selected && "selectedPlayer"}`}>
@@ -20,9 +20,10 @@ const Player = ({ mark, color, selected }) => {
 const Board = ({ board, setBoard, setGame, player, setPlayer }) => {
   return (
     <div className="boardContainer">
-      {[0, 1, 2, 3, 4, 5, 6, 7, 8]
+      {/* create array by board size */}
+      {Array.from({ length: board.boardSize }, (value, index) => index)
         .reduce((rows, id) => {
-          const index = Math.floor(id / 3);
+          const index = Math.floor(id / board.boardLength);
           rows[index] = rows[index] || [];
           rows[index].push(
             <Box
@@ -65,10 +66,11 @@ const Box = ({ id, board, setBoard, setGame, player, setPlayer }) => {
         status: newBoardStatus,
       }));
 
-      /** change player */
+      /** change next player */
       setGame((prevGame) => ({
         ...prevGame,
-        selectedPlayer: prevGame.selectedPlayer === "O" ? "X" : "O",
+        selectedPlayer: prevGame.selectedPlayer === "O" ? "X" : "O", //change player
+        maxGameCount: prevGame.maxGameCount - 1,
       }));
     } else {
       console.log("##this box is already taken");
@@ -82,34 +84,70 @@ const Box = ({ id, board, setBoard, setGame, player, setPlayer }) => {
 };
 
 /** Button component */
-const Button = ({ onClick }) => {
+const Button = ({ title, onClick }) => {
   return (
     <div className="button" onClick={onClick}>
-      Reset
+      {title}
+    </div>
+  );
+};
+
+/** Modal component */
+const Modal = ({ winner, onReset, setIsModal }) => {
+  /****** functions ******/
+  /** restart: close modal and reset */
+  const onRestart = () => {
+    setIsModal(false);
+    onReset();
+  };
+  return (
+    <div className="modalBox">
+      <div className="content">
+        {/* winner is => show winner / winners is none => show draw */}
+        {winner !== "" ? <span>WINNER!</span> : <span>DRAW!</span>}
+        <span className="winner">{winner}</span>
+        <Button title="Restart" onClick={onRestart} />
+      </div>
     </div>
   );
 };
 
 const App = () => {
+  /****** const data ******/
+  const BOARD_LENGTH = 3;
+  const BOARD_SIZE = BOARD_LENGTH ** 2;
+
+  /****** create objects ******/
   /** create players */
   const [o, setO] = useState(new PlayerClass("O", "lightGreen", [], true));
   const [x, setX] = useState(new PlayerClass("X", "darkGreen", [], false));
 
   /** create board */
-  const [board, setBoard] = useState(new BoardClass(Array(9).fill(null)));
+  const [board, setBoard] = useState(
+    new BoardClass(Array(BOARD_SIZE).fill(null), BOARD_LENGTH)
+  );
 
   /** create game */
-  const [game, setGame] = useState(new GameClass("O", true));
+  const [game, setGame] = useState(new GameClass("O", BOARD_SIZE));
 
-  /****** useeffect  ******/
-  /** check winners o */
+  /****** state manage ******/
+  /** show modal */
+  const [isModal, setIsModal] = useState(false);
+
+  /** winner */
+  const [winner, setWinner] = useState("");
+
+  /** game */
+
+  /****** trigger functions  ******/
+  /** check winner o */
   useEffect(() => {
-    checkWinners(o);
+    checkWinner(o);
   }, [o]);
 
-  /** check winners x */
+  /** check winner x */
   useEffect(() => {
-    checkWinners(x);
+    checkWinner(x);
   }, [x]);
 
   /****** constant data ******/
@@ -125,29 +163,42 @@ const App = () => {
   ];
 
   /****** functions ******/
-  /** check winners */
-  const checkWinners = (player) => {
-    winnerLines.forEach((line) => {
-      const length = player.status.filter((status) =>
+  /** check who is winner or draw */
+  const checkWinner = (player) => {
+    const LAST_TURN = 0; //game last turn
+    let sameIndexCount; //checker same index count
+    // check who is winner
+    winnerLines.some((line) => {
+      sameIndexCount = player.status.filter((status) =>
         line.includes(status)
       ).length;
-      if (length === 3) {
-        // set madal(reset Button)
-        console.log("Winner", player.mark);
+      //
+      if (sameIndexCount === BOARD_LENGTH) {
+        setIsModal(true);
+        setWinner(player.mark);
+        return true;
       }
     });
+    // check draw
+    if (sameIndexCount !== BOARD_LENGTH && game.maxGameCount === LAST_TURN) {
+      setWinner("");
+      setIsModal(true);
+    }
   };
 
   /** reset game, board, players */
   const onReset = () => {
-    setGame(new GameClass("O"));
-    setBoard(new BoardClass(Array(9).fill(null)));
+    setGame(new GameClass("O", BOARD_SIZE));
+    setBoard(new BoardClass(Array(BOARD_SIZE).fill(null), BOARD_LENGTH));
     setO(new PlayerClass("O", "lightGreen", [], true));
     setX(new PlayerClass("X", "darkGreen", [], false));
   };
 
   return (
     <div className="mainContainer">
+      {isModal && (
+        <Modal winner={winner} onReset={onReset} setIsModal={setIsModal} />
+      )}
       <div className="main">
         <div className="players">
           <Player
@@ -170,7 +221,7 @@ const App = () => {
           player={game.selectedPlayer === "O" ? o : x}
           setPlayer={game.selectedPlayer === "O" ? setO : setX}
         />
-        <Button onClick={onReset} />
+        <Button onClick={onReset} title="Reset" />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 /** Game class */
 export default class Game {
-  constructor(selectedPlayer, active) {
+  constructor(selectedPlayer, maxGameCount) {
     this.selectedPlayer = selectedPlayer;
-    this.active = active;
+    this.maxGameCount = maxGameCount;
   }
 }
