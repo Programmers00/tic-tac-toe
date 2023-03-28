@@ -13,14 +13,14 @@
   font-weight: 900;
 }
 .players {
-  max-width: 600px;
+  max-width: 400px;
   width: 80%;
   display: flex;
   justify-content: space-between;
   gap: 1vmin;
 }
 .player {
-  font-size: 10vmin;
+  font-size: 8vmin;
   width: 40%;
   border-radius: 5px;
   display: flex;
@@ -38,7 +38,7 @@
 }
 
 .boardContainer {
-  max-width: 600px;
+  max-width: 400px;
   padding: 2vmin;
   width: 80%;
   display: flex;
@@ -77,7 +77,7 @@
   background-color: #7a8b83;
 }
 .button {
-  max-width: 600px;
+  max-width: 400px;
   font-size: 8vmin;
   background-color: #967143;
   display: flex;
