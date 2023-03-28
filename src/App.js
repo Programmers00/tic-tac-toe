@@ -93,18 +93,37 @@ const Button = ({ title, onClick }) => {
 };
 
 /** Modal component */
-const Modal = ({ winner, onReset, setIsModal }) => {
+const Modal = ({ winner, onReset, isModal, setIsModal }) => {
+  /****** state manage ******/
+  // delay modal open
+  const [delayModal, setDelayModal] = useState(false);
+  // delay 0.2 seconds open modal
+  useEffect(() => {
+    setTimeout(() => {
+      setDelayModal(true);
+    }, 200);
+  }, [isModal]);
+
   /****** functions ******/
   /** restart: close modal and reset */
   const onRestart = () => {
     setIsModal(false);
     onReset();
   };
+
   return (
-    <div className="modalBox">
+    <div className={`modalBox ${delayModal ? "open" : "close"}`}>
       <div className="content">
         {/* winner is => show winner / winners is none => show draw */}
-        {winner !== "" ? <span>WINNER!</span> : <span>DRAW!</span>}
+        {winner !== "" ? (
+          <>
+            <div className="before"></div>
+            <div className="after"></div>
+            <span>WINNER!</span>
+          </>
+        ) : (
+          <span>DRAW!</span>
+        )}
         <span className="winner">{winner}</span>
         <Button title="Restart" onClick={onRestart} />
       </div>
@@ -119,8 +138,8 @@ const App = () => {
 
   /****** create objects ******/
   /** create players */
-  const [o, setO] = useState(new PlayerClass("O", "lightGreen", [], true));
-  const [x, setX] = useState(new PlayerClass("X", "darkGreen", [], false));
+  const [o, setO] = useState(new PlayerClass("O", [], true));
+  const [x, setX] = useState(new PlayerClass("X", [], false));
 
   /** create board */
   const [board, setBoard] = useState(
@@ -172,7 +191,7 @@ const App = () => {
       sameIndexCount = player.status.filter((status) =>
         line.includes(status)
       ).length;
-      //
+      // if index count same board length => show modal, winner
       if (sameIndexCount === BOARD_LENGTH) {
         setIsModal(true);
         setWinner(player.mark);
@@ -190,15 +209,21 @@ const App = () => {
   const onReset = () => {
     setGame(new GameClass("O", BOARD_SIZE));
     setBoard(new BoardClass(Array(BOARD_SIZE).fill(null), BOARD_LENGTH));
-    setO(new PlayerClass("O", "lightGreen", [], true));
-    setX(new PlayerClass("X", "darkGreen", [], false));
+    setO(new PlayerClass("O", [], true));
+    setX(new PlayerClass("X", [], false));
   };
 
   return (
     <div className="mainContainer">
       {isModal && (
-        <Modal winner={winner} onReset={onReset} setIsModal={setIsModal} />
+        <Modal
+          winner={winner}
+          onReset={onReset}
+          setIsModal={setIsModal}
+          isModal={isModal}
+        />
       )}
+
       <div className="main">
         <div className="players">
           <Player
