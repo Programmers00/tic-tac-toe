@@ -17,6 +17,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [How To Run](#how-to-run)
 - [Browser Support](#browser-support)
 - [License](#license)
 
@@ -26,6 +27,26 @@
 - Have a 3 X 3 square that when clicking on one of the squares displays the current player's shape(O, X) and moves to the next player.(a player cannt add a shape to a square that has already been selected).
 - If a player has 3 of the same shape in a row or diagonally that user wins the game and the app should then display the winner on modal.
 - Have a button that if cliced resets the board.
+
+## How To Run
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
 ## Browser Support
 
