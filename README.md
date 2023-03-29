@@ -6,9 +6,6 @@
 
 <p align="center">
     This Sam-Tac-Toe(Tic-Tac-Toe) game is built by using React, HTML, CSS.(There is no library dependency).
-
-    Userinterface is classic style.
-
 </p>
 
 <p align="center">
